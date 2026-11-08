@@ -1,0 +1,63 @@
+[project]
+name = "freeact"
+version = "1.0.0"
+description = "FreeAct: Demonstration-Free Robot Adaptation via Action-Grounded Generated Videos (Jittor inference and analysis)"
+readme = "README.md"
+license = "Apache-2.0"
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md", "freeact/tokenizers/laq/LICENSE"]
+authors = [
+    { name = "Zhe-Han Mo" },
+    { name = "Jia-Ning Li" },
+    { name = "Jiaxi Song" },
+    { name = "Meng-Hao Guo" },
+    { name = "Shi-Min Hu" },
+]
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "jittor==1.3.11.0",
+    "termcolor==3.3.0",             # imported by LIBERO (not declared by hf-libero)
+    "numpy<2",
+    "pyarrow==21.0.0",         # pyarrow >= 22 needs numpy 2, which Jittor 1.3.11 does not support
+    "av==15.1.0",              # pinned video decoder
+    "pillow",
+    "tokenizers",
+    "jinja2",
+    "huggingface-hub",
+    "scipy<1.16",              # 1.16+ bundles OpenBLAS >= 0.3.29: after any fork() (Jittor forks on import) the next threaded LAPACK call deadlocks
+    "h5py",
+    "pyyaml",
+    "tqdm",
+    "hf-libero==0.1.4",       # LIBERO environments (torch-dependent extras excluded below)
+    "robosuite==1.4.0",
+    "bddl==1.0.1",
+    "mujoco==3.3.2",
+    "gymnasium",
+    "opencv-python-headless",
+    "matplotlib",
+    "ray[default]==2.54.1",
+    "scikit-learn",
+    "umap-learn",
+]
+
+
+[project.urls]
+Homepage = "https://freeact.pages.dev/"
+Paper = "https://freeact.pages.dev/FreeAct.pdf"
+Repository = "https://github.com/Mo-ZheHan/FreeAct-Jittor"
+Models = "https://huggingface.co/Mo-ZheHan/FreeAct"
+Data = "https://huggingface.co/datasets/Mo-ZheHan/FreeAct-Data"
+
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["freeact*"]
+
+[tool.setuptools.package-data]
+"freeact.envs" = ["assets/**/*"]
+"freeact.tokenizers.laq" = ["LICENSE"]
+
+[tool.uv]
+# hf-libero lists PyTorch-based training dependencies that its environments do not use
+exclude-dependencies = ["robomimic", "thop", "transformers", "wandb", "egl-probe", "hf-egl-probe", "torch", "torchvision"]
